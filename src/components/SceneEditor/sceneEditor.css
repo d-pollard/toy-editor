@@ -1,0 +1,1342 @@
+/* SceneEditor styles - Updated for full canvas layout */
+
+/* Main Scene Editor Container - Full canvas coverage */
+.scene-editor-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--background);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Video Preview Area - 65% height, 100% when timeline is hidden */
+.video-preview-area {
+    height: 65%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #000000;
+    border-bottom: 0.5px solid var(--border);
+    transition: height 0.3s ease;
+}
+
+/* When timeline is hidden, video preview takes full height */
+.scene-editor-container.no-timeline .video-preview-area {
+    height: calc(100% - 4%); /* Full height minus playback panel */
+}
+
+/* Video Playback Panel - 4% height */
+.video-playback-panel {
+    height: 4%;
+    background: var(--background);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 2rem;
+    position: relative;
+}
+
+.video-playback-panel > div:first-child {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.video-playback-panel > div:last-child {
+    position: absolute;
+    right: 2rem;
+}
+
+/* Timeline Area - 31% height */
+.timeline-area {
+    height: 31%;
+    display: flex;
+    flex-direction: row;
+    /* Changed to row for 10/90 split */
+    background: var(--background);
+    border-top: 0.5px solid #1C0F09;
+    border-bottom: 0.5px solid #1C0F09;
+}
+
+/* Timeline Controls - Left 10% */
+.timeline-controls {
+    width: 10%;
+    min-width: 120px;
+    /* Minimum width for readability */
+    background: var(--background);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    gap: 8px;
+}
+
+.time-display {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.current-time {
+    color: var(--primary);
+}
+
+.time-separator {
+    color: var(--text-muted);
+}
+
+.total-time {
+    color: var(--text-muted);
+}
+
+.future-controls {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.placeholder-text {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+/* Timeline Canvas - Right 90% */
+.timeline-canvas {
+    width: 90%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    /* Required for absolute positioning of playhead */
+}
+
+/* Shared scroll container for ruler and clips */
+.timeline-scroll-container {
+    height: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    position: relative;
+}
+
+/* Timeline Ruler Container - Sticky at top */
+.timeline-ruler-container {
+    height: 15%;
+    background: var(--background);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    overflow: visible; /* Changed from overflow-x: auto */
+}
+
+/* Timeline Ruler */
+.timeline-ruler {
+    height: 100%;
+    position: relative;
+    min-width: 100%;
+}
+
+.ruler-track {
+    height: 100%;
+    position: relative;
+    background: var(--background);
+}
+
+.time-marker {
+    position: absolute;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.marker-tick {
+    width: 1px;
+    height: 8px;
+    background: var(--border);
+    margin-bottom: 2px;
+}
+
+.marker-label {
+    font-family: 'Jost', sans-serif;
+    font-size: 10px;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+/* Timeline Track Container - No independent scroll */
+.timeline-track-container {
+    min-height: 85%;
+    background: var(--background);
+    overflow: visible; /* Changed from overflow-x: auto */
+    padding-bottom: 20px; /* Extra space at bottom for better UX */
+}
+
+.timeline-clips-track {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    gap: 8px;
+    min-width: 100%;
+}
+
+/* Legacy track container - Updated for integrated layout */
+.sceneEditor-track-container {
+    width: 100%;
+    height: 100%;
+    transition: all 0.3s ease;
+    box-shadow: none;
+    /* Remove shadow for integrated layout */
+    overflow-y: hidden;
+    background: var(--background);
+    border: none;
+    /* Remove border for integrated layout */
+    border-radius: 0;
+    /* Remove border radius for integrated layout */
+    position: relative;
+    /* Change from fixed to relative */
+    bottom: auto;
+    /* Remove bottom positioning */
+    left: auto;
+    /* Remove left positioning */
+    right: auto;
+    /* Remove right positioning */
+    z-index: auto;
+    /* Remove z-index for integrated layout */
+    margin: 0;
+    /* Remove margin */
+}
+
+.sceneEditor-track-content {
+    overflow-y: hidden;
+    height: 100%;
+}
+
+.sceneEditor-cells-container {
+    scrollbar-width: thin;
+    scrollbar-color: var(--filmforge-border) transparent;
+    overflow-y: hidden;
+    height: 100%;
+}
+
+/* Customize horizontal scrollbar */
+.sceneEditor-cells-container::-webkit-scrollbar {
+    height: 6px;
+    width: 0;
+    /* Hide vertical scrollbar in WebKit browsers */
+}
+
+.sceneEditor-cells-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sceneEditor-cells-container::-webkit-scrollbar-thumb {
+    background-color: var(--filmforge-border);
+    border-radius: 3px;
+}
+
+.sceneEditor-cell {
+    transition: all 0.2s ease;
+}
+
+.sceneEditor-cell:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* SceneEditor drag handle styles */
+.sceneEditor-drag-ghost {
+    border-radius: 4px;
+    pointer-events: none;
+    z-index: 9999;
+    border: 2px solid #1c0f09;
+    overflow: hidden;
+}
+
+/* SceneEditor icon hover animation */
+@keyframes sceneEditorIconHover {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.sceneEditor-icon-hover {
+    animation: sceneEditorIconHover 1.5s ease-in-out infinite;
+}
+
+/* Add a subtle pulsing border to the ghost image */
+@keyframes ghostPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(79, 70, 229, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(79, 70, 229, 0);
+    }
+}
+
+.sceneEditor-drag-ghost {
+    animation: ghostPulse 2s infinite;
+}
+
+/* Animation for the video preview - reduced for performance */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.scene-editor-video-preview {
+    /* Reduce animation duration to minimize flashing */
+    animation: fadeIn 0.1s ease;
+}
+
+/* Progress bar animation */
+@keyframes progress {
+    from {
+        width: 0%;
+    }
+
+    to {
+        width: 100%;
+    }
+}
+
+.sceneEditor-progress {
+    transition: width 0.1s linear;
+}
+
+/* Drop indicator animation */
+@keyframes pulse {
+    0% {
+        opacity: 0.7;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.7;
+    }
+}
+
+.sceneEditor-drop-indicator {
+    background: repeating-linear-gradient(to bottom,
+            #1c0f09 0px,
+            #1c0f09 10px,
+            transparent 10px,
+            transparent 15px);
+    border-radius: 1px;
+    animation: pulse 1.5s infinite;}
+
+/* Scene Editor Header */
+.scene-editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: var(--background);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    z-index: 10;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .scene-editor-container {
+        /* Maintain full coverage on mobile */
+    }
+
+    .video-preview-area {
+        height: 75%;
+        /* Slightly less on mobile for timeline visibility */
+    }
+
+    .timeline-area {
+        height: 25%;
+        /* Slightly more on mobile */
+    }
+
+    .timeline-controls {
+        min-width: 100px;
+    }
+
+    .time-display {
+        font-size: 12px;
+    }
+}
+
+/* Phase 2C: Zoom Controls */
+.zoom-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.zoom-controls-label {
+    text-align: center;
+}
+
+.zoom-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+/* Phase 2D: Timeline Playhead */
+/* Z-Index Hierarchy:
+ * 10: Timeline Clips Track (base)
+ * 15: Timeline Ruler
+ * 20: Timeline Clips
+ * 25: Timeline Clips (hovered)
+ * 30: Clip Hover Overlay
+ * 31: Clip Overlay Elements
+ * 32: Clip Delete Button
+ * 33: Clip Delete Button (hovered)
+ * 35: Playhead Container & Line
+ * 55: Playhead Triangle Handle (draggable)
+ * 60: Playhead Tooltip
+ */
+:root {
+    --timeline-playhead-color: #3b82f6;
+    /* Blue primary color */
+    --timeline-playhead-shadow: rgba(59, 130, 246, 0.4);
+    --timeline-playhead-shadow-active: rgba(59, 130, 246, 0.6);
+}
+
+.timeline-playhead-container {
+    pointer-events: none;
+    user-select: none;
+    z-index: 35;
+    /* Above timeline clips but below hover overlays for proper interaction */
+}
+
+.timeline-playhead-line {
+    position: relative;
+    z-index: 36;
+    /* Slightly above playhead container */
+    pointer-events: none;
+    /* Visual only - no interaction */
+    transition: box-shadow 0.2s ease;
+    /* Phase 2.5: Smooth transition during trim operations */
+    transition: box-shadow 0.2s ease, left 0.1s ease-out;
+}
+
+.timeline-playhead-line.hovering {
+    filter: brightness(1.1);
+}
+
+.timeline-playhead-line.dragging {
+    filter: brightness(1.2);
+}
+
+.timeline-playhead-body {
+    position: relative;
+    transition: box-shadow 0.2s ease;
+}
+
+.timeline-playhead-arrow {
+    transition: opacity 0.2s ease;
+    z-index: 51;
+}
+
+/* Triangle Handle - Only Draggable Element */
+.timeline-playhead-handle {
+    z-index: 55;
+    /* Above everything else for reliable interaction */
+    /* Ensure handle container stays completely invisible */
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.timeline-playhead-handle:hover {
+    /* Prevent any hover effects on the container itself */
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.timeline-playhead-triangle-handle {
+    z-index: 56;
+    /* Highest z-index for the visual triangle */
+}
+
+.timeline-playhead-handle:hover .timeline-playhead-triangle-handle {
+    filter: brightness(1.15) !important;
+    /* Removed box-shadow as user requested */
+}
+
+.timeline-playhead-handle.dragging .timeline-playhead-triangle-handle {
+    filter: brightness(1.3) !important;
+    /* Removed box-shadow as user requested */
+}
+
+.timeline-playhead-tooltip {
+    animation: fadeInTooltip 0.2s ease-out;
+    z-index: 60;
+}
+
+@keyframes fadeInTooltip {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+/* Playhead responsive design */
+@media (max-width: 768px) {
+    .timeline-playhead-line {
+        width: 3px;
+        /* Slightly thicker on mobile for easier interaction */
+        transform: translateX(-1.5px);
+    }
+
+    .timeline-playhead-interaction-area {
+        width: 20px;
+        /* Larger touch area on mobile */
+        left: calc(var(--playhead-position) - 10px);
+    }
+
+    .timeline-playhead-tooltip {
+        font-size: 10px;
+        padding: 3px 6px;
+    }
+}
+
+.zoom-button {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    font-size: 11px;
+    min-height: 24px;
+}
+
+.zoom-icon {
+    font-size: 12px;
+}
+
+.zoom-label {
+    font-size: 10px;
+}
+
+.zoom-button-active {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+}
+
+/* Phase 2C: Timeline Clips with Absolute Positioning */
+.timeline-clips-track {
+    position: relative;
+    background: var(--background);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow-x: auto;
+    overflow-y: visible;
+    z-index: 10;
+    /* Base layer for clips track */
+}
+
+.timeline-clip {
+    position: absolute;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--card);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    overflow: hidden;
+    z-index: 20;
+    /* Above track but below playhead */
+}
+
+.timeline-clip:hover {
+    /* No hover effects - clean appearance */
+    box-shadow: none !important;
+    transform: none !important;
+    filter: none !important;
+    background: var(--card) !important;
+}
+
+.timeline-clip-selected {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+.timeline-clip-background {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: var(--card);
+}
+
+/* Phase 2C: Concatenated Keyframes */
+.timeline-clip-keyframes {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.timeline-clip-keyframe {
+    position: relative;
+    overflow: hidden;
+    background: var(--muted);
+}
+
+.keyframe-thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.keyframe-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--muted);
+    border: 1px dashed var(--border);
+}
+
+.placeholder-icon {
+    font-size: 16px;
+    opacity: 0.6;
+}
+
+.keyframe-separator {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--border);
+    opacity: 0.5;
+}
+
+.timeline-clip-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: var(--muted);
+    gap: 4px;
+}
+
+.loading-text {
+    font-size: 10px;
+    color: var(--muted-foreground);
+    text-align: center;
+}
+
+.loading-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--muted-foreground);
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Timeline Clip Overlay */
+.timeline-clip-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom,
+            rgba(0, 0, 0, 0.7) 0%,
+            transparent 30%,
+            transparent 70%,
+            rgba(0, 0, 0, 0.7) 100%);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 4px;
+    pointer-events: none;
+    z-index: 30;
+    /* Above clip content but below playhead */
+}
+
+.timeline-clip:hover .timeline-clip-overlay {
+    opacity: 1;
+}
+
+.timeline-clip-overlay>* {
+    pointer-events: auto;
+    z-index: 31;
+}
+
+/* Phase 2.5: Gap indicator removed - was showing in wrong location */
+
+/* Phase 2: Ripple Preview Animation */
+@keyframes ripplePreview {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+
+    100% {
+        opacity: 0.7;
+        transform: scale(1);
+    }
+}
+
+.ripple-preview-overlay {
+    position: absolute;
+    pointer-events: none;
+    z-index: 15;
+}
+
+.ripple-preview-label {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #3b82f6;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 600;
+    white-space: nowrap;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Ensure buttons are clickable above playhead */
+
+.clip-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    color: white;
+    font-size: 10px;
+    font-weight: 500;
+}
+
+.clip-duration {
+    background: transparent;
+    color: white;
+    padding: 1px 4px;
+    border-radius: 2px;
+}
+
+.clip-type {
+    font-size: 12px;
+}
+
+.clip-delete-button {
+    background: transparent;
+    color: white;
+    border: none;
+    border-radius: 2px;
+    padding: 2px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s ease;
+    z-index: 32;
+    position: absolute;
+    right: 10px;
+    /* Move away from right trim handle */
+    top: 8px;
+    /* Move down from top */
+}
+
+.clip-delete-button:hover {
+    background: transparent;
+    color: white;
+    z-index: 33;
+}
+
+.timeline-clip-selection-border {
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border: 2px solid var(--primary);
+    border-radius: 6px;
+    pointer-events: none;
+}
+
+/* Enhanced Timeline Ruler for Phase 2C */
+.timeline-ruler {
+    position: relative;
+    background: var(--muted);
+    border-bottom: 1px solid var(--border);
+    overflow: visible;
+    z-index: 15;
+    /* Above clips track, below playhead */
+    cursor: pointer;
+    /* Indicate clickable */
+}
+
+.ruler-track {
+    position: relative;
+    height: 100%;
+    min-width: 100%;
+    z-index: 16;
+}
+
+.time-marker {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+    pointer-events: none;
+}
+
+.marker-tick {
+    width: 1px;
+    height: 12px;
+    background: var(--foreground);
+    margin-bottom: 2px;
+}
+
+.marker-label {
+    font-family: 'Jost', sans-serif;
+    font-size: 9px;
+    color: var(--foreground);
+    white-space: nowrap;
+    background: var(--background);
+    padding: 1px 3px;
+    border-radius: 2px;
+    border: 1px solid var(--border);
+}
+
+/* Scrollbar styling for shared timeline scroll container */
+.timeline-scroll-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.timeline-scroll-container::-webkit-scrollbar-track {
+    background: var(--muted);
+}
+
+.timeline-scroll-container::-webkit-scrollbar-thumb {
+    background: var(--muted-foreground);
+    border-radius: 4px;
+}
+
+.timeline-scroll-container::-webkit-scrollbar-thumb:hover {
+    background: var(--foreground);
+}
+
+/* Timeline Clip Drag & Drop Support */
+.timeline-clip-dragging {
+    opacity: 0.7;
+    transform: rotate(2deg) scale(1.05);
+    z-index: 1000 !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    cursor: grabbing;
+    pointer-events: none;
+    /* Prevent interference during drag */
+}
+
+.timeline-track-drag-active {
+    background: rgba(59, 130, 246, 0.05);
+    border: 2px dashed rgba(59, 130, 246, 0.3);
+    border-radius: 8px;
+    position: relative;
+}
+
+/* Trim Handles Styling */
+.trim-handle {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+
+.timeline-clip:hover .trim-handle {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.trim-handle-hovered {
+    opacity: 1 !important;
+}
+
+.trim-handle-hovered .trim-bracket {
+    filter: none;
+}
+
+.trim-handle-dragging {
+    opacity: 1 !important;
+}
+
+.trim-handle-dragging .trim-bracket {
+    filter: none;
+}
+
+.trim-bracket {
+    transition: filter 0.2s ease;
+}
+
+.trim-icon {
+    pointer-events: none;
+}
+
+.razor-blade-icon {
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.3));
+}
+
+/* Trim Tooltip Styling */
+.trim-tooltip {
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.trim-tooltip-content {
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px;
+    border-radius: 4px;
+    font-family: 'Jost', sans-serif;
+    font-size: 12px;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.trim-tooltip-arrow {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid rgba(0, 0, 0, 0.8);
+}
+
+/* Enhanced Timeline Clip for Trim Integration */
+.timeline-clip {
+    position: relative;
+    /* Ensure proper positioning for trim handles */
+}
+
+.timeline-track-drag-active::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(59, 130, 246, 0.1);
+    pointer-events: none;
+    animation: pulseDropZone 1.5s ease-in-out infinite;
+}
+
+@keyframes pulseDropZone {
+
+    0%,
+    100% {
+        opacity: 0.3;
+    }
+
+    50% {
+        opacity: 0.6;
+    }
+}
+
+/* Drag preview ghost styling */
+.timeline-clip-drag-ghost {
+    opacity: 0.8;
+    transform: rotate(5deg);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    border: 2px solid var(--primary);
+}
+
+/* Enhanced hover states during drag operations */
+.timeline-clip:not(.timeline-clip-dragging):hover {
+    /* No hover effects */
+    box-shadow: none !important;
+    transform: none !important;
+    filter: none !important;
+}
+
+/* Cursor states for drag operations */
+.timeline-clip {
+    cursor: grab;
+}
+
+.timeline-clip:active {
+    cursor: grabbing;
+}
+
+.timeline-clip.timeline-clip-dragging {
+    cursor: grabbing;
+}
+
+/* Visual feedback for valid drop zones */
+.timeline-clips-track[data-drag-over="true"] {
+    background: rgba(34, 197, 94, 0.1);
+    border-color: rgba(34, 197, 94, 0.3);
+}
+
+/* Enhanced timeline clip selection for drag operations */
+.timeline-clip-selected.timeline-clip-dragging {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4);
+}
+
+/* Drop indicator animations - updated for position-based drops */
+@keyframes pulseDropIndicator {
+
+    0%,
+    100% {
+        opacity: 0.9;
+        transform: translateX(-2px) scaleY(1);
+        box-shadow: 0 0 12px rgba(16, 185, 129, 0.8);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translateX(-2px) scaleY(1.1);
+        box-shadow: 0 0 16px rgba(16, 185, 129, 1);
+    }
+}
+
+.timeline-drop-indicator {
+    animation: pulseDropIndicator 1s ease-in-out infinite;
+}
+
+/* Drag ghost enhancements */
+.timeline-drag-ghost {
+    transition: none;
+    /* No transitions during drag for smooth following */
+    backdrop-filter: blur(4px);
+    background: rgba(255, 255, 255, 0.95);
+    text-align: center;
+    line-height: 1.2;
+}
+
+/* Enhanced timeline clip dragging state */
+.timeline-clip-dragging {
+    opacity: 0.3 !important;
+    transform: scale(0.98) !important;
+    filter: grayscale(0.3);
+    transition: none;
+    /* Remove transitions during drag */
+}
+
+/* Track drag active state refinements */
+.timeline-track-drag-active {
+    background: rgba(59, 130, 246, 0.03);
+    border: 1px dashed rgba(59, 130, 246, 0.2);
+    transition: all 0.2s ease;
+}
+
+.timeline-track-drag-active::after {
+    background: rgba(59, 130, 246, 0.05);
+}
+
+/* ================================
+ * Timeline Mode Styles - Phase 1C.2
+ * ================================ */
+
+/* Timeline Area Mode-based Styling */
+.timeline-area.trim-mode {
+    /* Default trim mode - normal timeline layout */
+}
+
+.timeline-area.rearrange-mode {
+    /* Rearrange mode - spaced layout for clip movement */
+    background: rgba(255, 215, 0, 0.02);
+    /* Subtle yellow tint to indicate rearrange mode */
+}
+
+/* Timeline Canvas Mode-based Styling */
+.timeline-canvas.trim-mode {
+    /* Normal timeline layout */
+}
+
+.timeline-canvas.rearrange-mode {
+    /* Spaced layout for rearrange operations */
+    background: rgba(255, 215, 0, 0.03);
+}
+
+/* Clip Spacing for Rearrange Mode */
+.timeline-clip.rearrange-mode {
+    /* Add margin for spaced layout in rearrange mode */
+    margin-right: 20px !important;
+
+    /* Dotted border to indicate moveable state */
+    border: 2px dotted var(--primary) !important;
+    border-radius: 6px;
+
+    /* Enhanced shadow for "floating" effect */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    /* Cursor indicates clip is moveable */
+    cursor: grab !important;
+}
+
+.timeline-clip.rearrange-mode:hover {
+    /* No hover effects */
+}
+
+.timeline-clip.rearrange-mode:active {
+    cursor: grabbing !important;
+    transform: translateY(0px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Hide trim handles completely in rearrange mode */
+.timeline-area.rearrange-mode .trim-handle-left,
+.timeline-area.rearrange-mode .trim-handle-right,
+.timeline-area.rearrange-mode .trim-tooltip {
+    display: none !important;
+}
+
+/* Insertion Indicator for Rearrange Mode */
+.rearrange-insertion-indicator {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--primary);
+    border-radius: 2px;
+    z-index: 1000;
+
+    /* Animated glow effect */
+    box-shadow:
+        0 0 8px var(--primary),
+        0 0 16px rgba(59, 130, 246, 0.5);
+
+    /* Pulse animation */
+    animation: insertion-pulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes insertion-pulse {
+    from {
+        opacity: 0.7;
+        transform: scaleX(1);
+    }
+
+    to {
+        opacity: 1;
+        transform: scaleX(1.2);
+    }
+}
+
+/* Smooth transitions between modes */
+.timeline-area,
+.timeline-clip {
+    transition: all 0.2s ease;
+}
+
+/* Mode transition animations */
+.timeline-area.transitioning {
+    pointer-events: none;
+    /* Prevent interactions during transition */
+    opacity: 0.9;
+    transform: scale(0.999);
+    /* Subtle scale to indicate transition */
+}
+
+/* Enhanced transition states */
+.timeline-clip.transitioning {
+    transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+    pointer-events: none;
+}
+
+/* Improved transitions between modes */
+.timeline-area {
+    transition: background 0.2s ease, opacity 0.1s ease;
+}
+
+.timeline-clip {
+    transition:
+        margin-right 0.2s ease,
+        border 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease,
+        opacity 0.15s ease;
+}
+
+/* Rearrange mode background pattern */
+.timeline-area.rearrange-mode::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: repeating-linear-gradient(45deg,
+            transparent,
+            transparent 10px,
+            rgba(255, 215, 0, 0.03) 10px,
+            rgba(255, 215, 0, 0.03) 20px);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Dragged clip visual feedback */
+.timeline-clip-being-dragged {
+    opacity: 0.4 !important;
+    border: 2px dashed var(--primary) !important;
+    background: rgba(59, 130, 246, 0.1) !important;
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.3) !important;
+    transform: scale(0.98) !important;
+    transition: all 0.2s ease !important;
+}
+
+.timeline-clip-being-dragged .timeline-clip-background {
+    opacity: 0.6 !important;
+}
+
+.timeline-clip-being-dragged .timeline-clip-overlay {
+    opacity: 0.8 !important;
+}
+
+/* Enhanced ghost styling */
+.timeline-drag-ghost {
+    position: fixed !important;
+    background: var(--card) !important;
+    border: 2px solid var(--primary) !important;
+    border-radius: 4px !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
+    opacity: 0.9 !important;
+    z-index: 9999 !important;
+    pointer-events: none !important;
+    transform: rotate(5deg) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 12px !important;
+    color: var(--primary) !important;
+    font-weight: 600 !important;
+    animation: ghostFloat 0.3s ease-out !important;
+}
+
+@keyframes ghostFloat {
+    from {
+        opacity: 0;
+        transform: rotate(5deg) scale(0.8);
+    }
+
+    to {
+        opacity: 0.9;
+        transform: rotate(5deg) scale(1);
+    }
+}
+
+/* Highlight animation for timeline clip when flying animation completes */
+.timeline-clip-highlight {
+    animation: clipHighlight 1s ease-out;
+}
+
+@keyframes clipHighlight {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(28, 15, 9, 0.7);
+    }
+
+    25% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 8px rgba(28, 15, 9, 0.5);
+    }
+
+    50% {
+        transform: scale(1.03);
+        box-shadow: 0 0 0 12px rgba(28, 15, 9, 0.3);
+    }
+
+    75% {
+        transform: scale(1.01);
+        box-shadow: 0 0 0 8px rgba(28, 15, 9, 0.1);
+    }
+
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(28, 15, 9, 0);
+    }
+}
+
+/* Global reset for timeline clip hover effects */
+.timeline-clip:hover,
+.timeline-clip:hover *,
+.timeline-clip:hover::before,
+.timeline-clip:hover::after,
+div[class*="timeline-clip"]:hover,
+div[class*="timeline-clip"]:hover * {
+    box-shadow: none !important;
+    filter: none !important;
+    text-shadow: none !important;
+    transform: none !important;
+}
+
+/* Force remove all shadows from timeline clips */
+.timeline-clip,
+.timeline-clip *,
+.timeline-clip::before,
+.timeline-clip::after {
+    box-shadow: none !important;
+    filter: none !important;
+}

@@ -1,0 +1,312 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 50 20% 90%;
+    /* HSL equivalent of #F1EDE1 */
+    --foreground: 0 0% 10%;
+    /* Black */
+
+    --card: 0 0% 10%;
+    --card-foreground: 50 20% 90%;
+
+    --popover: 50 50% 90%;
+    --popover-foreground: 0 0% 10%;
+
+    --primary: 50 20% 90%;
+    --primary-foreground: 0 0% 10%;
+
+    --secondary: 0 0% 10%;
+    --secondary-foreground: 50 20% 90%;
+
+    --muted: 50 50% 90%;
+    --muted-foreground: 0 0% 10%;
+
+    --accent: 50 50% 90%;
+    --accent-foreground: 0 0% 10%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 50 20% 90%;
+    --input: 0 0% 10%;
+    --ring: 50 20% 90%;
+
+    --radius: 0;
+  }
+
+  body {
+    @apply font-jost bg-[#FFFFFE] text-black antialiased;
+    cursor: url('/favicon.ico'), auto;
+  }
+}
+
+@layer components {
+  .workspace-card {
+    @apply bg-card border border-filmforge-divider shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg;
+  }
+
+  .control-panel {
+    @apply bg-secondary p-4 shadow-inner;
+  }
+
+  .filmforge-button {
+    @apply bg-filmforge-btn-bg hover:bg-filmforge-btn-bg/90 text-black font-medium py-2 px-4 transition-all duration-300 flex items-center justify-center gap-2;
+  }
+
+  .filmforge-input {
+    @apply bg-filmforge-input-bg border border-filmforge-border-light px-3 py-2 w-full focus:ring-2 focus:ring-filmforge-text focus:border-transparent outline-none text-filmforge-text;
+  }
+
+  .module-title {
+    @apply text-lg font-medium text-filmforge-text mb-4 flex items-center gap-2;
+  }
+
+  .project-item {
+    @apply flex items-center p-3 hover:bg-secondary transition-colors duration-200 cursor-pointer;
+  }
+
+  /* Generate page specific styles */
+  .generate-container {
+    @apply h-screen w-full flex flex-col bg-filmforge-background text-filmforge-text;
+  }
+
+  .generate-panel {
+    @apply h-full flex flex-col bg-filmforge-background text-filmforge-text;
+  }
+
+  .generate-panel-header {
+    @apply p-6 border-b border-filmforge-border-light;
+  }
+
+  .generate-panel-content {
+    @apply flex-1 overflow-auto p-6;
+  }
+
+  /* Tab styling */
+  .generate-tabs {
+    @apply bg-filmforge-background text-filmforge-text;
+  }
+
+  .generate-tab {
+    @apply text-filmforge-text font-medium data-[state=active]:bg-filmforge-text data-[state=active]:text-white;
+  }
+
+  .generate-tab-list {
+    @apply bg-filmforge-background border-b border-filmforge-border-light;
+  }
+
+  .generate-input-label {
+    @apply text-sm text-filmforge-text font-medium;
+  }
+
+  .generate-input-container {
+    @apply border border-filmforge-border-light p-3 bg-filmforge-input-bg;
+  }
+
+  .generate-input {
+    @apply bg-filmforge-input-bg border-filmforge-border-light text-filmforge-text resize-none focus:border-filmforge-text;
+  }
+
+  .generate-button {
+    @apply border border-filmforge-text text-filmforge-text bg-transparent hover:bg-filmforge-text hover:text-white font-medium;
+  }
+
+  .generate-card {
+    @apply bg-filmforge-input-bg overflow-hidden border border-filmforge-border-light;
+  }
+
+  /* Inspector button styling - removes background to maintain transparent (#FFFFFE) background */
+  .inspector-action-button {
+    background-color: transparent !important;
+  }
+
+  .inspector-action-button:hover {
+    background-color: rgba(0, 0, 0, 0.05) !important;
+  }
+
+  /* Inspector header divider styling - consistent inset from edges */
+  .inspector-header-divider {
+    position: relative;
+    margin: 0 4px;
+    /* Inset from both left and right edges */
+    border-bottom: 1px solid rgba(79, 64, 57, 0.4);
+    /* Lighter color */
+  }
+
+  /* Counter-clockwise spin animation for running job indicator */
+  .animate-spin-ccw {
+    animation: spin-ccw 1s linear infinite;
+  }
+
+  @keyframes spin-ccw {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(-360deg);
+    }
+  }
+
+  /* Camera flash animation for frame extraction */
+  @keyframes flash {
+    0% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 0.8;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  /* Sliding underline animation for project titles */
+  .sliding-underline {
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+  }
+
+  .sliding-underline::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0.5px;
+    bottom: -2px;
+    left: 0;
+    background-color: #1C0F09;
+    transition: width 0.3s ease-in-out;
+  }
+
+  .sliding-underline:hover::after {
+    width: 100%;
+  }
+}
+
+/* Hide Lovable badge when published */
+.lovable-branding {
+  display: none !important;
+}
+
+/* Directional fill animation for Become a Flicker button */
+.directional-fill-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.directional-fill-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: white;
+  transform: scaleX(0) scaleY(0);
+  transition: transform 0.3s ease-out;
+  transform-origin: center;
+}
+
+.directional-fill-button:hover::before {
+  transform: scaleX(1) scaleY(1);
+}
+
+/* Directional fill based on hover position */
+.directional-fill-button[data-hover-direction="top"]::before {
+  transform-origin: bottom;
+}
+
+.directional-fill-button[data-hover-direction="bottom"]::before {
+  transform-origin: top;
+}
+
+.directional-fill-button[data-hover-direction="left"]::before {
+  transform-origin: right;
+}
+
+.directional-fill-button[data-hover-direction="right"]::before {
+  transform-origin: left;
+}
+
+/* Swipe fill animation for Become a Flicker button */
+.swipe-fill-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.swipe-fill-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: white;
+  transform: scaleX(0) scaleY(0);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center;
+}
+
+.swipe-fill-button[data-swipe-direction="top"]::before {
+  transform-origin: bottom;
+}
+
+.swipe-fill-button[data-swipe-direction="bottom"]::before {
+  transform-origin: left;
+}
+
+.swipe-fill-button[data-swipe-direction="left"]::before {
+  transform-origin: right;
+}
+
+.swipe-fill-button[data-swipe-direction="right"]::before {
+  transform-origin: left;
+}
+
+.swipe-fill-button[data-swipe-direction="top"]:hover::before,
+.swipe-fill-button[data-swipe-direction="bottom"]:hover::before,
+.swipe-fill-button[data-swipe-direction="left"]:hover::before,
+.swipe-fill-button[data-swipe-direction="right"]:hover::before {
+  transform: scaleX(1) scaleY(1);
+}
+
+/* Header hide/show animation */
+.header-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.header-container.header-hidden {
+  transform: translateY(-100%);
+}
+
+.header-container.header-visible {
+  transform: translateY(0);
+}
+
+/* Header hover area for showing header */
+.header-hover-area {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 20px;
+  z-index: 49;
+  background: transparent;
+}
+
+.header-hover-area:hover + .header-container,
+.header-container:hover {
+  transform: translateY(0);
+}
