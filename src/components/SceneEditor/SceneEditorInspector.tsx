@@ -13,7 +13,11 @@ const SceneEditorInspector: React.FC = () => {
 
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
-            await addMediaFromFile(file);
+            const mediaNodeId = await addMediaFromFile(file);
+            // Automatically add to timeline after uploading
+            if (mediaNodeId) {
+                addMediaToTimeline(mediaNodeId);
+            }
         }
 
         // Reset input
@@ -22,7 +26,9 @@ const SceneEditorInspector: React.FC = () => {
         }
     };
 
-    const handleAddToTimeline = (mediaNodeId: string) => {
+    const handleAddToTimeline = (e: React.MouseEvent, mediaNodeId: string) => {
+        e.preventDefault();
+        e.stopPropagation();
         addMediaToTimeline(mediaNodeId);
     };
 
@@ -128,7 +134,7 @@ const SceneEditorInspector: React.FC = () => {
                                                 </p>
                                             </div>
                                             <button
-                                                onClick={() => handleAddToTimeline(node.id)}
+                                                onClick={(e) => handleAddToTimeline(e, node.id)}
                                                 className="px-2 py-1 text-xs bg-filmforge-btn-bg hover:bg-filmforge-btn-bg/90 text-filmforge-text transition-colors"
                                             >
                                                 Add

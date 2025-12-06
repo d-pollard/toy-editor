@@ -54,7 +54,7 @@ interface TimelineContextType {
   stateManager: SimpleStateManager;
 
   // CRUD operations
-  addMediaFromFile: (file: File) => Promise<void>;
+  addMediaFromFile: (file: File) => Promise<string>;
   addMediaToTimeline: (mediaNodeId: string) => void;
   removeClip: (clipId: string) => void;
   updateClip: (clipId: string, updates: Partial<SceneEditorCell>) => void;
@@ -155,6 +155,8 @@ export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       ...prev,
       nodes: [...prev.nodes, newNode]
     }));
+
+    return nodeId;
   }, []);
 
   // Add media node to timeline
