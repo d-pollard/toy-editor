@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useCanvas } from '../../contexts/TimelineContext';
 import { NodeType, MediaNode } from '../../types/timeline';
-import { Play, Pause, SkipForward, SkipBack, Minimize2, Camera } from 'lucide-react';
+import { Play, Pause, SkipForward, SkipBack, Minimize2, Camera, Upload } from 'lucide-react';
 import { Button } from '../ui/button';
 import mediaService from '../../services/mediaService';
 import { VirtualTimelineManager, VideoPlayerInstruction, TimelineState } from './VirtualTimelineManager';
@@ -296,14 +296,57 @@ const VideoPreviewArea: React.FC<VideoPreviewAreaProps> = ({ virtualTimeline, on
 
     const currentMediaNode = getCurrentMediaNode();
 
+    // File input ref for upload
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files;
+        if (!files) return;
+
+        const { addMediaFromFile, addMediaToTimeline } = useCanvas() as any;
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            await addMediaFromFile(file);
+            // Auto-add to timeline after upload
+            setTimeout(() => {
+                const nodes = stateManager.getNodes();
+                const lastNode = nodes[nodes.length - 1];
+                if (lastNode) {
+                    addMediaToTimeline(lastNode.id);
+                }
+            }, 100);
+        }
+
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
+    };
+
     // Show empty state if no VTM or no clips
     if (!virtualTimeline || !sceneEditor?.cells.length) {
         return (
             <div className="video-preview-area">
                 <div className="text-center text-filmforge-text-light">
-                    <Play className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                    <p className="text-lg">Add media to timeline to start editing</p>
-                    <p className="text-sm mt-2">Use "Add to Scene" buttons on media nodes</p>
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="video/*,image/*"
+                        multiple
+                        onChange={handleFileUpload}
+                        className="hidden"
+                        id="video-preview-upload"
+                    />
+                    <Upload className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                    <p className="text-lg mb-4">Add media to timeline to start editing</p>
+                    <label
+                        htmlFor="video-preview-upload"
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-black hover:bg-gray-800 text-white cursor-pointer transition-colors rounded-md font-medium"
+                    >
+                        <Upload className="w-5 h-5" />
+                        Upload Videos & Images
+                    </label>
+                    <p className="text-sm mt-4 opacity-60">Supports MP4, MOV, JPG, PNG</p>
                 </div>
             </div>
         );

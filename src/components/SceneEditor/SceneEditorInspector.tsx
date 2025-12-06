@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useCanvas } from '../../contexts/TimelineContext';
-import { Upload, Film, Image as ImageIcon } from 'lucide-react';
+import { Upload, Film, Image as ImageIcon, Plus } from 'lucide-react';
 
 const SceneEditorInspector: React.FC = () => {
     const [activeTab, setActiveTab] = useState('Media');
@@ -26,10 +26,24 @@ const SceneEditorInspector: React.FC = () => {
         addMediaToTimeline(mediaNodeId);
     };
 
+    const handleUploadClick = () => {
+        fileInputRef.current?.click();
+    };
+
     return (
         <div className="h-full flex flex-col bg-white">
-            {/* Tabs Section */}
-            <div className="p-4">
+            {/* Header with Tabs and Upload Button */}
+            <div className="p-4 border-b border-filmforge-border-light">
+                <div className="flex items-center justify-between mb-3">
+                    <h2 className="text-sm font-semibold text-filmforge-text">Media</h2>
+                    <button
+                        onClick={handleUploadClick}
+                        className="flex items-center justify-center w-8 h-8 bg-black hover:bg-gray-700 text-white transition-all rounded-full shadow-md hover:shadow-lg"
+                        title="Upload media"
+                    >
+                        <Plus className="w-4 h-4" />
+                    </button>
+                </div>
                 <div className="flex gap-1">
                     <button
                         onClick={() => setActiveTab('Media')}
