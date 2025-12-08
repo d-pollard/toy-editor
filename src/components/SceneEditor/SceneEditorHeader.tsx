@@ -9,7 +9,7 @@ const SceneEditorHeader: React.FC = () => {
     };
 
     return (
-        <div className="h-12 bg-white border-b border-filmforge-border-light flex items-center justify-between px-4">
+        <div className="h-12 bg-white border-b border-filmforge-border-light flex items-center justify-between px-4 flex-shrink-0">
             {/* Left Section */}
             <div className="flex items-center gap-4">
                 <h1 className="text-lg font-semibold text-filmforge-text">Timeline Editor</h1>
