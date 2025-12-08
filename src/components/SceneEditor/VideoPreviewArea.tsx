@@ -386,15 +386,6 @@ const VideoPreviewArea: React.FC<VideoPreviewAreaProps> = ({ virtualTimeline, on
                         </span>
                     </button>
                 )}
-
-                {/* Canvas button */}
-                <button
-                    onClick={onToggleVideoPreview}
-                    className="bg-transparent hover:bg-white/10 text-white flex items-center gap-2 px-3 py-2 rounded-sm"
-                >
-                    <Minimize2 className="w-4 h-4 text-white" />
-                    <span className="text-white">Canvas</span>
-                </button>
             </div>
 
             <div className="relative w-full h-full flex items-center justify-center">
