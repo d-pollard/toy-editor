@@ -38,18 +38,8 @@ const SceneEditorInspector: React.FC = () => {
 
     return (
         <div className="h-full flex flex-col bg-white">
-            {/* Header with Tabs and Upload Button */}
+            {/* Header with Tabs */}
             <div className="p-4 border-b border-filmforge-border-light">
-                <div className="flex items-center justify-between mb-3">
-                    <h2 className="text-sm font-semibold text-filmforge-text">Media</h2>
-                    <button
-                        onClick={handleUploadClick}
-                        className="flex items-center justify-center w-8 h-8 bg-black hover:bg-gray-700 text-white transition-all rounded-full shadow-md hover:shadow-lg"
-                        title="Upload media"
-                    >
-                        <Plus className="w-4 h-4" />
-                    </button>
-                </div>
                 <div className="flex gap-1">
                     <button
                         onClick={() => setActiveTab('Media')}
@@ -83,7 +73,6 @@ const SceneEditorInspector: React.FC = () => {
                     <div className="space-y-4">
                         {/* Upload Section */}
                         <div className="space-y-2">
-                            <h3 className="text-sm font-medium text-filmforge-text">Upload Media</h3>
                             <input
                                 ref={fileInputRef}
                                 type="file"
@@ -95,64 +84,15 @@ const SceneEditorInspector: React.FC = () => {
                             />
                             <label
                                 htmlFor="media-upload"
-                                className="flex items-center justify-center gap-2 px-4 py-3 bg-filmforge-btn-bg hover:bg-filmforge-btn-bg/90 text-filmforge-text cursor-pointer transition-colors border border-filmforge-border-light"
+                                className="flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-filmforge-text cursor-pointer transition-colors border border-filmforge-border-light rounded"
                             >
                                 <Upload className="w-4 h-4" />
-                                <span className="text-sm font-medium">Upload Videos & Images</span>
+                                <span className="text-sm font-medium">Upload Media</span>
                             </label>
-                            <p className="text-xs text-filmforge-text-muted">
+                            <p className="text-xs text-filmforge-text-muted text-center">
                                 Supports MP4, MOV, JPG, PNG
                             </p>
                         </div>
-
-                        {/* Media Library */}
-                        {nodes.length > 0 && (
-                            <div className="space-y-2">
-                                <h3 className="text-sm font-medium text-filmforge-text">Media Library</h3>
-                                <div className="space-y-2">
-                                    {nodes.map(node => (
-                                        <div
-                                            key={node.id}
-                                            className="flex items-center gap-2 p-2 border border-filmforge-border-light hover:bg-gray-50 transition-colors"
-                                        >
-                                            <div className="flex-shrink-0">
-                                                {node.type === 'video' ? (
-                                                    <Film className="w-8 h-8 text-filmforge-text-muted" />
-                                                ) : (
-                                                    <ImageIcon className="w-8 h-8 text-filmforge-text-muted" />
-                                                )}
-                                            </div>
-                                            <div className="flex-1 min-w-0">
-                                                <p className="text-xs font-medium text-filmforge-text truncate">
-                                                    {node.label}
-                                                </p>
-                                                <p className="text-xs text-filmforge-text-muted">
-                                                    {node.type === 'video'
-                                                        ? `${node.data.duration?.toFixed(1)}s`
-                                                        : `${node.data.width} × ${node.data.height}`
-                                                    }
-                                                </p>
-                                            </div>
-                                            <button
-                                                onClick={(e) => handleAddToTimeline(e, node.id)}
-                                                className="px-2 py-1 text-xs bg-filmforge-btn-bg hover:bg-filmforge-btn-bg/90 text-filmforge-text transition-colors"
-                                            >
-                                                Add
-                                            </button>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-
-                        {nodes.length === 0 && (
-                            <div className="text-center text-filmforge-text-secondary mt-8">
-                                <Upload className="w-12 h-12 mx-auto mb-2 opacity-30" />
-                                <p className="text-sm opacity-60">
-                                    Upload videos and images to get started
-                                </p>
-                            </div>
-                        )}
                     </div>
                 ) : (
                     <div className="text-center text-filmforge-text-secondary mt-8">
