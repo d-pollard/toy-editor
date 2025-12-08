@@ -478,6 +478,20 @@ export class VirtualTimelineManagerImpl implements VirtualTimelineManager {
             seekTime: clipPosition?.clipTime || 0
         };
 
+        console.log('📺 VTM notifyVideoPlayerInstruction:', {
+            currentTime: this.currentTime,
+            clipPosition,
+            instruction,
+            cellsCount: this.cells.length,
+            cells: this.cells.map(c => ({
+                id: c.id,
+                mediaNodeId: c.mediaNodeId,
+                startTime: c.startTime,
+                duration: c.duration,
+                position: c.position
+            }))
+        });
+
         this.videoPlayerCallbacks.forEach(callback => {
             try {
                 callback(instruction);

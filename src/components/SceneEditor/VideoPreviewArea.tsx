@@ -67,26 +67,40 @@ const VideoPreviewArea: React.FC<VideoPreviewAreaProps> = ({ virtualTimeline, on
     // Load media URL when instruction changes
     useEffect(() => {
         const loadMediaUrl = async () => {
+            console.log('🎬 VideoPreviewArea: Loading media for instruction:', {
+                hasInstruction: !!currentInstruction,
+                hasClip: !!currentInstruction?.clip,
+                clipId: currentInstruction?.clip?.id,
+                mediaNodeId: currentInstruction?.clip?.mediaNodeId,
+                nodesCount: nodes.length
+            });
+
             if (!currentInstruction?.clip) {
+                console.log('🎬 No clip in instruction, clearing media URL');
                 setMediaUrl('');
                 return;
             }
 
             const node = nodes.find(node => node.id === currentInstruction.clip.mediaNodeId);
+            console.log('🎬 Found node for mediaNodeId:', currentInstruction.clip.mediaNodeId, '→', node?.id, node?.type);
+
             if (node && (node.type === NodeType.IMAGE || node.type === NodeType.VIDEO)) {
                 const mediaNode = node as MediaNode;
                 if (mediaNode.data.url) {
                     try {
                         const url = await mediaService.getMediaUrl(mediaNode.data.url);
+                        console.log('🎬 Loaded media URL:', url.substring(0, 50) + '...');
                         setMediaUrl(url);
                     } catch (error) {
-                        console.error('Error loading media URL:', error);
+                        console.error('🎬 Error loading media URL:', error);
                         setMediaUrl('');
                     }
                 } else {
+                    console.log('🎬 No data.url on media node');
                     setMediaUrl('');
                 }
             } else {
+                console.log('🎬 Node not found or wrong type, clearing media URL');
                 setMediaUrl('');
             }
         };

@@ -267,6 +267,8 @@ const TimelineClip: React.FC<TimelineClipProps> = ({
     // Handle clip deletion
     const handleDelete = (e: React.MouseEvent) => {
         e.stopPropagation();
+        e.preventDefault(); // Prevent mousedown from triggering rearrange mode
+        console.log('🗑️ Deleting clip:', cell.id);
         const operation = new RemoveSceneEditorCellOperation(cell.id);
         stateManager.getOperationManager().executeWithContext(operation, stateManager);
     };
@@ -560,6 +562,10 @@ const TimelineClip: React.FC<TimelineClipProps> = ({
                     <button
                         className="clip-delete-button"
                         onClick={handleDelete}
+                        onMouseDown={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                        }}
                         title="Delete clip"
                     >
                         <X className="w-3 h-3" />

@@ -5,9 +5,15 @@ import { Node, Canvas, SceneEditorCell, MediaNode, NodeType, MediaNodeStatus } f
 class SimpleStateManager {
   private canvas: Canvas;
   private listeners: Set<() => void> = new Set();
+  private reactSetCanvas?: React.Dispatch<React.SetStateAction<Canvas>>;
 
   constructor(initialCanvas: Canvas) {
     this.canvas = initialCanvas;
+  }
+
+  // Allow React to hook into state updates
+  setReactSetCanvas(setCanvas: React.Dispatch<React.SetStateAction<Canvas>>) {
+    this.reactSetCanvas = setCanvas;
   }
 
   getCanvas(): Canvas {
@@ -16,6 +22,12 @@ class SimpleStateManager {
 
   updateCanvas(newCanvas: Canvas): void {
     this.canvas = newCanvas;
+
+    // CRITICAL FIX: Trigger React re-render by calling setCanvas
+    if (this.reactSetCanvas) {
+      this.reactSetCanvas(newCanvas);
+    }
+
     this.notifyListeners();
   }
 
@@ -86,9 +98,17 @@ export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   // State manager instance (persisted across renders)
   const stateManagerRef = useRef<SimpleStateManager>(new SimpleStateManager(canvas));
 
-  // Update state manager when canvas changes
+  // Hook up React state to state manager
   React.useEffect(() => {
-    stateManagerRef.current.updateCanvas(canvas);
+    stateManagerRef.current.setReactSetCanvas(setCanvas);
+  }, []);
+
+  // Update state manager when canvas changes (but avoid infinite loops)
+  React.useEffect(() => {
+    // Only update if the canvas reference actually changed
+    if (stateManagerRef.current.getCanvas() !== canvas) {
+      stateManagerRef.current.updateCanvas(canvas);
+    }
   }, [canvas]);
 
   // Always visible in standalone mode

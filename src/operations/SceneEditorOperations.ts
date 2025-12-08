@@ -23,6 +23,21 @@ export class RemoveSceneEditorCellOperation {
       cell.position = index;
     });
 
+    // CRITICAL FIX: Recalculate startTime for all clips after removal
+    // This ensures VirtualTimelineManager can correctly map playhead position to clips
+    let cumulativeTime = 0;
+    updatedCells.forEach((cell: SceneEditorCell) => {
+      cell.startTime = cumulativeTime;
+      // Calculate effective duration (accounting for trimming)
+      const originalDuration = cell.duration || 0;
+      const trimStart = cell.trimStart || 0;
+      const trimEnd = cell.trimEnd || 0;
+      const effectiveDuration = Math.max(0.1, originalDuration - trimStart - trimEnd);
+      cumulativeTime += effectiveDuration;
+    });
+
+    console.log('🗑️ RemoveSceneEditorCellOperation: Recalculated startTime values after removing', this.cellId);
+
     context.updateCanvas({
       ...canvas,
       sceneEditor: {
@@ -54,6 +69,21 @@ export class TrimSceneEditorCellOperation {
       }
       return cell;
     });
+
+    // CRITICAL FIX: Recalculate startTime for all clips after trimming
+    // Trimming changes effective duration, which affects startTime of subsequent clips
+    let cumulativeTime = 0;
+    updatedCells.forEach((cell: SceneEditorCell) => {
+      cell.startTime = cumulativeTime;
+      // Calculate effective duration (accounting for trimming)
+      const originalDuration = cell.duration || 0;
+      const trimStart = cell.trimStart || 0;
+      const trimEnd = cell.trimEnd || 0;
+      const effectiveDuration = Math.max(0.1, originalDuration - trimStart - trimEnd);
+      cumulativeTime += effectiveDuration;
+    });
+
+    console.log('✂️ TrimSceneEditorCellOperation: Recalculated startTime values after trimming', this.cellId);
 
     context.updateCanvas({
       ...canvas,
@@ -128,6 +158,22 @@ export class MoveSceneEditorCellOperation {
       cell.position = index;
     });
 
+    // CRITICAL FIX: Recalculate startTime for all clips after rearrangement
+    // This ensures VirtualTimelineManager can correctly map playhead position to clips
+    let cumulativeTime = 0;
+    updatedCells.forEach((cell: SceneEditorCell) => {
+      cell.startTime = cumulativeTime;
+      // Calculate effective duration (accounting for trimming)
+      const originalDuration = cell.duration || 0;
+      const trimStart = cell.trimStart || 0;
+      const trimEnd = cell.trimEnd || 0;
+      const effectiveDuration = Math.max(0.1, originalDuration - trimStart - trimEnd);
+      cumulativeTime += effectiveDuration;
+    });
+
+    console.log('🔄 MoveSceneEditorCellOperation: Recalculated startTime values:',
+      updatedCells.map(c => ({ id: c.id, position: c.position, startTime: c.startTime })));
+
     context.updateCanvas({
       ...canvas,
       sceneEditor: {
@@ -168,6 +214,22 @@ export class AddSceneEditorCellOperation {
     updatedCells.forEach((cell: SceneEditorCell, index: number) => {
       cell.position = index;
     });
+
+    // CRITICAL FIX: Recalculate startTime for all clips after adding
+    // This ensures VirtualTimelineManager can correctly map playhead position to clips
+    // Note: The new cell has duration=0, which will be updated by updateTimelineState
+    let cumulativeTime = 0;
+    updatedCells.forEach((cell: SceneEditorCell) => {
+      cell.startTime = cumulativeTime;
+      // Calculate effective duration (accounting for trimming)
+      const originalDuration = cell.duration || 0;
+      const trimStart = cell.trimStart || 0;
+      const trimEnd = cell.trimEnd || 0;
+      const effectiveDuration = Math.max(0.1, originalDuration - trimStart - trimEnd);
+      cumulativeTime += effectiveDuration;
+    });
+
+    console.log('➕ AddSceneEditorCellOperation: Recalculated startTime values after adding', cellId);
 
     context.updateCanvas({
       ...canvas,
