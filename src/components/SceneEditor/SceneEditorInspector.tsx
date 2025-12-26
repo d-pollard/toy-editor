@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useCanvas } from '../../contexts/TimelineContext';
-import { Upload, Film, Image as ImageIcon, Plus } from 'lucide-react';
+import { Upload } from 'lucide-react';
 
 const SceneEditorInspector: React.FC = () => {
     const [activeTab, setActiveTab] = useState('Media');

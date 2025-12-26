@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSceneEditorPanel } from '../../contexts/SceneEditorPanelContext';
+import ExportModal from './ExportModal';
 
 const SceneEditorHeader: React.FC = () => {
     const { panelVisibility, togglePanel } = useSceneEditorPanel();
+    const [isExportModalOpen, setIsExportModalOpen] = useState(false);
 
     const handleExport = () => {
-        alert('Export feature coming soon! This would export your timeline to a video file.');
+        setIsExportModalOpen(true);
     };
 
     return (
@@ -46,6 +48,8 @@ const SceneEditorHeader: React.FC = () => {
                     Export
                 </button>
             </div>
+
+            <ExportModal open={isExportModalOpen} onOpenChange={setIsExportModalOpen} />
         </div>
     );
 };

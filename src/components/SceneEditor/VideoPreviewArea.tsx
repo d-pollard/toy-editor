@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useCanvas } from '../../contexts/TimelineContext';
-import { NodeType, MediaNode } from '../../types/timeline';
-import { Play, Pause, SkipForward, SkipBack, Minimize2, Camera, Upload } from 'lucide-react';
-import { Button } from '../ui/button';
+import { NodeType, MediaNode } from '@/types/timeline.ts';
+import { Camera, Upload } from 'lucide-react';
 import mediaService from '../../services/mediaService';
-import { VirtualTimelineManager, VideoPlayerInstruction, TimelineState } from './VirtualTimelineManager';
-import { VideoFrameExtractOperation } from '../../operations/VideoFrameExtractOperation';
+import { VirtualTimelineManager, VideoPlayerInstruction } from './VirtualTimelineManager';
+import { VideoFrameExtractOperation } from '@/operations/VideoFrameExtractOperation.ts';
 import { toast } from 'sonner';
 
 interface VideoPreviewAreaProps {
@@ -13,14 +12,15 @@ interface VideoPreviewAreaProps {
     onToggleVideoPreview?: () => void;
 }
 
-const VideoPreviewArea: React.FC<VideoPreviewAreaProps> = ({ virtualTimeline, onToggleVideoPreview }) => {
+const VideoPreviewArea: React.FC<VideoPreviewAreaProps> = ({ virtualTimeline }) => {
     const { nodes, stateManager } = useCanvas();
 
     // Simplified state - only what's needed for display
     const [currentInstruction, setCurrentInstruction] = useState<VideoPlayerInstruction | null>(null);
     const [mediaUrl, setMediaUrl] = useState<string>('');
     const [isPlaying, setIsPlaying] = useState(false);
-    const [globalTime, setGlobalTime] = useState(0);
+    // @ts-ignore
+  const [globalTime, setGlobalTime] = useState(0);
     const [isVideoLoading, setIsVideoLoading] = useState(false);
     const [isExtractingFrame, setIsExtractingFrame] = useState(false);
 
@@ -81,7 +81,7 @@ const VideoPreviewArea: React.FC<VideoPreviewAreaProps> = ({ virtualTimeline, on
                 return;
             }
 
-            const node = nodes.find(node => node.id === currentInstruction.clip.mediaNodeId);
+            const node = nodes.find(node => node.id === currentInstruction?.clip?.mediaNodeId);
             console.log('🎬 Found node for mediaNodeId:', currentInstruction.clip.mediaNodeId, '→', node?.id, node?.type);
 
             if (node && (node.type === NodeType.IMAGE || node.type === NodeType.VIDEO)) {
@@ -119,7 +119,7 @@ const VideoPreviewArea: React.FC<VideoPreviewAreaProps> = ({ virtualTimeline, on
     const getCurrentMediaNode = () => {
         if (!currentInstruction?.clip) return null;
 
-        const node = nodes.find(node => node.id === currentInstruction.clip.mediaNodeId);
+        const node = nodes.find(node => node.id === currentInstruction?.clip?.mediaNodeId);
         if (node && (node.type === NodeType.IMAGE || node.type === NodeType.VIDEO)) {
             return node as MediaNode;
         }
@@ -291,7 +291,7 @@ const VideoPreviewArea: React.FC<VideoPreviewAreaProps> = ({ virtualTimeline, on
                 position
             );
 
-            await stateManager.getOperationManager().executeWithContext(
+            stateManager.getOperationManager().executeWithContext(
                 operation,
                 stateManager
             );
@@ -312,24 +312,19 @@ const VideoPreviewArea: React.FC<VideoPreviewAreaProps> = ({ virtualTimeline, on
 
     // File input ref for upload
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const { addMediaFromFile, addMediaToTimeline } = useCanvas() as any;
 
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
         if (!files) return;
 
-        const { addMediaFromFile, addMediaToTimeline } = useCanvas() as any;
-
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
-            await addMediaFromFile(file);
-            // Auto-add to timeline after upload
-            setTimeout(() => {
-                const nodes = stateManager.getNodes();
-                const lastNode = nodes[nodes.length - 1];
-                if (lastNode) {
-                    addMediaToTimeline(lastNode.id);
-                }
-            }, 100);
+            const mediaNodeId = await addMediaFromFile(file);
+            // Automatically add to timeline after uploading
+            if (mediaNodeId) {
+              addMediaToTimeline(mediaNodeId);
+            }
         }
 
         if (fileInputRef.current) {
